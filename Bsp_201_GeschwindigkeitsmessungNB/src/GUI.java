@@ -60,6 +60,7 @@ public class GUI extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(jTable1);
 
         jMenu1.setText("File");
