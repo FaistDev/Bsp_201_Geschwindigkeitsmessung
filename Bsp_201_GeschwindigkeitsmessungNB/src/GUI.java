@@ -1,9 +1,15 @@
+
+import java.awt.Color;
+import java.io.File;
+import java.time.LocalDateTime;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Ben
@@ -11,12 +17,15 @@
 public class GUI extends javax.swing.JFrame {
 
     private BL bl = new BL();
+
     /**
      * Creates new form GUI
      */
     public GUI() {
         initComponents();
         jTable1.setModel(bl);
+        jTable1.setDefaultRenderer(Object.class, new CellRenderer());
+        bl.add(new Measurement(LocalDateTime.now(), "DL 390 ID", 65, 50));
     }
 
     /**
@@ -36,15 +45,31 @@ public class GUI extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        miSave = new javax.swing.JMenuItem();
+        miLoad = new javax.swing.JMenuItem();
 
         miAdd.setText("Hinzufügen");
+        miAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAddActionPerformed(evt);
+            }
+        });
         jPopupMenu1.add(miAdd);
 
         miDelete.setText("Löschen");
+        miDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miDeleteActionPerformed(evt);
+            }
+        });
         jPopupMenu1.add(miDelete);
 
         miAvg.setText("Durchschnitt");
+        miAvg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miAvgActionPerformed(evt);
+            }
+        });
         jPopupMenu1.add(miAvg);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -64,10 +89,24 @@ public class GUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        miSave.setText("Save");
+        miSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSaveActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miSave);
+
+        miLoad.setText("Load");
+        miLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miLoadActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miLoad);
+
+        jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
 
@@ -90,6 +129,53 @@ public class GUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void miAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAddActionPerformed
+        // TODO add your handling code here:
+        VelocityDlg dialog = new VelocityDlg(this, true);
+        dialog.setVisible(true);
+        if (dialog.isCheck() == true) {
+            bl.add(dialog.getObject());
+        }
+    }//GEN-LAST:event_miAddActionPerformed
+
+    private void miDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miDeleteActionPerformed
+        // TODO add your handling code here:
+        bl.delete(jTable1.getSelectedRow());
+    }//GEN-LAST:event_miDeleteActionPerformed
+
+    private void miAvgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miAvgActionPerformed
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(this, "" + bl.calcAvg());
+    }//GEN-LAST:event_miAvgActionPerformed
+
+    private void miSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSaveActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        int res = chooser.showOpenDialog(null);
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File f = chooser.getSelectedFile();
+            try {
+                bl.save(f);
+            } catch (Exception e) {
+                System.out.println("Fehler001: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_miSaveActionPerformed
+
+    private void miLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miLoadActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        int res = chooser.showOpenDialog(null);
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File f = chooser.getSelectedFile();
+            try {
+                bl.load(f);
+            } catch (Exception e) {
+                System.out.println("Fehler002: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_miLoadActionPerformed
 
     /**
      * @param args the command line arguments
@@ -128,7 +214,6 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -136,5 +221,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem miAdd;
     private javax.swing.JMenuItem miAvg;
     private javax.swing.JMenuItem miDelete;
+    private javax.swing.JMenuItem miLoad;
+    private javax.swing.JMenuItem miSave;
     // End of variables declaration//GEN-END:variables
 }

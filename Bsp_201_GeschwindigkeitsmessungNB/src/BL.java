@@ -1,4 +1,9 @@
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
@@ -39,6 +44,43 @@ public class BL extends AbstractTableModel {
         return COLS[column]; //To change body of generated methods, choose Tools | Templates.
     }
     
+    public void add(Measurement m){
+        measurements.add(m);
+        fireTableRowsInserted(measurements.size()-1, measurements.size()-1);
+    }
     
+    public void delete(int index){
+        measurements.remove(index);
+        fireTableDataChanged();
+    }
     
+    public double calcAvg(){
+        double sum=0.0;
+        for (Measurement m : measurements) {
+            sum+=m.getÜbertretung();
+        }
+        return sum/measurements.size();
+    }
+    
+    public void save(File f) throws Exception{
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
+        for (Measurement s : measurements) {
+            oos.writeObject(s);
+        }
+        oos.flush();
+    }
+    
+    public void load(File f) throws Exception {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+        Object s = null;
+        measurements.clear();
+        while ((s = ois.readObject()) != null) {
+            try {
+                add((Measurement) s);
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
+
+        }
+    }
 }

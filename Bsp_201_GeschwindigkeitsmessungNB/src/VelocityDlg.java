@@ -1,5 +1,6 @@
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 
@@ -62,22 +63,32 @@ public class VelocityDlg extends javax.swing.JDialog {
 
         jLabel1.setText("Datum");
         getContentPane().add(jLabel1);
+
+        etDate.setText("04.05.2018");
         getContentPane().add(etDate);
 
         jLabel2.setText("Uhrzeit");
         getContentPane().add(jLabel2);
+
+        etTime.setText("14:15");
         getContentPane().add(etTime);
 
         jLabel3.setText("Kennzeichen");
         getContentPane().add(jLabel3);
+
+        etKennzeichen.setText("DL 658 LO");
         getContentPane().add(etKennzeichen);
 
         jLabel4.setText("V-Gemessen");
         getContentPane().add(jLabel4);
+
+        etGemessen.setText("50");
         getContentPane().add(etGemessen);
 
         jLabel5.setText("V-Erlaubt");
         getContentPane().add(jLabel5);
+
+        etErlaubt.setText("30");
         getContentPane().add(etErlaubt);
 
         btConfirm.setText("Übernehmen");
@@ -102,9 +113,8 @@ public class VelocityDlg extends javax.swing.JDialog {
     private void btConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfirmActionPerformed
         // TODO add your handling code here:
         check=true;
-        String[] date = etDate.getText().split(".");
-        String[] time = etDate.getText().split(":");
-        LocalDateTime dateTime = LocalDateTime.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]), Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+        String date = etDate.getText()+" "+etTime.getText();
+        LocalDateTime dateTime = LocalDateTime.parse(date,DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
         object=new Measurement(dateTime, etKennzeichen.getText(), Integer.parseInt(etGemessen.getText()), Integer.parseInt(etErlaubt.getText()));
         this.dispose();
     }//GEN-LAST:event_btConfirmActionPerformed

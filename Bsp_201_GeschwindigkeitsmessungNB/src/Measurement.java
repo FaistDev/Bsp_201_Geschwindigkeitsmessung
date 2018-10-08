@@ -1,4 +1,5 @@
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /*
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
  *
  * @author Ben
  */
-public class Measurement {
+public class Measurement implements Serializable{
     private LocalDateTime dateTime;
     private String kennzeichen;
     private int gemessen;
